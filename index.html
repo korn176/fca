@@ -32,6 +32,9 @@
   </div>
 
   <canvas id="colorCard" width="768" height="768"></canvas>
+  
+  <button id="saveBtn">Save Image</button>
+
 
   <script>
     const canvas = document.getElementById('colorCard');
@@ -79,6 +82,19 @@
     colorNameInput.addEventListener('input', drawCard);
     colorHexInput.addEventListener('input', drawCard);
     colorCodeInput.addEventListener('input', drawCard);
+    
+    const saveBtn = document.getElementById('saveBtn');
+
+saveBtn.addEventListener('click', () => {
+  const imageURI = canvas.toDataURL('image/png');
+  const link = document.createElement('a');
+  link.href = imageURI;
+  link.download = 'color-card.png';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+});
+
   </script>
 </body>
 </html>
