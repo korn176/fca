@@ -88,7 +88,7 @@ saveBtn.addEventListener('click', () => {
   const imageURI = canvas.toDataURL('image/png');
   const link = document.createElement('a');
   link.href = imageURI;
-  link.download = 'color-card.png';
+  link.download = 'fca-color.png';
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
