@@ -13,6 +13,7 @@
       padding: 10px;
       background: #f0f0f0;
       display: flex;
+      flex-wrap: wrap;
       gap: 10px;
     }
     input {
@@ -29,11 +30,11 @@
     <input id="colorName" type="text" placeholder="Color Name" />
     <input id="colorHex" type="text" placeholder="Hex Code" />
     <input id="colorCode" type="text" placeholder="FCA Code" />
+    <input id="textColor" type="text" placeholder="Text Color (e.g. ffffff)" value="ffffff" />
     <button id="saveBtn" style="width:150px; height:50px; font-size:18px;">Save Image</button>
   </div>
 
   <canvas id="colorCard" width="768" height="768"></canvas>
-
 
   <script>
     const canvas = document.getElementById('colorCard');
@@ -42,13 +43,15 @@
     const colorNameInput = document.getElementById('colorName');
     const colorHexInput = document.getElementById('colorHex');
     const colorCodeInput = document.getElementById('colorCode');
+    const textColorInput = document.getElementById('textColor');
 
     const organization = "Fenix Color Association";
 
     function drawCard() {
       const name = colorNameInput.value.replace(/\b\w/g, char => char.toUpperCase());
-      const hex = "#"+colorHexInput.value;
-      const code = "FCA "+colorCodeInput.value.padStart(3, '0');
+      const hex = "#" + colorHexInput.value.replace(/#/g, '');
+      const code = "FCA " + colorCodeInput.value.padStart(3, '0');
+      const textColor = "#" + textColorInput.value.replace(/#/g, '');
 
       // Clear canvas
       ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -58,7 +61,7 @@
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       // Text styles
-      ctx.fillStyle = "#ffffff";
+      ctx.fillStyle = textColor;
       ctx.textBaseline = "bottom";
 
       // Draw color name
@@ -73,27 +76,30 @@
       ctx.fillText(code, 30, canvas.height - 30);
 
       // Draw hex code (bottom right)
-      const textWidth = ctx.measureText(hex).width;
-      ctx.fillText(hex.toUpperCase(), canvas.width - textWidth - 30, canvas.height - 30);
+      const hexDisplay = hex.toUpperCase();
+      const textWidth = ctx.measureText(hexDisplay).width;
+      ctx.fillText(hexDisplay, canvas.width - textWidth - 30, canvas.height - 30);
     }
 
-    // Add event listeners to inputs
-    colorNameInput.addEventListener('input', drawCard);
-    colorHexInput.addEventListener('input', drawCard);
-    colorCodeInput.addEventListener('input', drawCard);
-    
+    // Redraw whenever any input changes
+    [colorNameInput, colorHexInput, colorCodeInput, textColorInput].forEach(input =>
+      input.addEventListener('input', drawCard)
+    );
+
+    // Save button logic
     const saveBtn = document.getElementById('saveBtn');
+    saveBtn.addEventListener('click', () => {
+      const imageURI = canvas.toDataURL('image/png');
+      const link = document.createElement('a');
+      link.href = imageURI;
+      link.download = `fca-color.png`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    });
 
-saveBtn.addEventListener('click', () => {
-  const imageURI = canvas.toDataURL('image/png');
-  const link = document.createElement('a');
-  link.href = imageURI;
-  link.download = `fca-color.png`;
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-});
-
+    // Initial draw
+    drawCard();
   </script>
 </body>
 </html>
