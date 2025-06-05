@@ -46,7 +46,7 @@
     const organization = "Fenix Color Association";
 
     function drawCard() {
-      const name = colorNameInput.value;
+      const name = colorNameInput.value.replace(/\b\w/g, char => char.toUpperCase());
       const hex = "#"+colorHexInput.value;
       const code = "FCA "+colorCodeInput.value.padStart(3, '0');
 
