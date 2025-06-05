@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Color Card Generator</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+    }
+    #controls {
+      padding: 10px;
+      background: #f0f0f0;
+      display: flex;
+      gap: 10px;
+    }
+    input {
+      padding: 5px;
+      font-size: 16px;
+    }
+    canvas {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div id="controls">
+    <input id="colorName" type="text" placeholder="Color Name" />
+    <input id="colorHex" type="text" placeholder="Hex Code" />
+    <input id="colorCode" type="text" placeholder="FCA Code" />
+  </div>
+
+  <canvas id="colorCard" width="768" height="768"></canvas>
+
+  <script>
+    const canvas = document.getElementById('colorCard');
+    const ctx = canvas.getContext('2d');
+
+    const colorNameInput = document.getElementById('colorName');
+    const colorHexInput = document.getElementById('colorHex');
+    const colorCodeInput = document.getElementById('colorCode');
+
+    const organization = "Fenix Color Association";
+
+    function drawCard() {
+      const name = colorNameInput.value;
+      const hex = "#"+colorHexInput.value;
+      const code = "FCA "+colorCodeInput.value;
+
+      // Clear canvas
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Fill background with color
+      ctx.fillStyle = hex;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Text styles
+      ctx.fillStyle = "#ffffff";
+      ctx.textBaseline = "bottom";
+
+      // Draw color name
+      ctx.font = "bold 48px Arial";
+      ctx.fillText(name, 30, canvas.height - 90);
+
+      // Draw organization
+      ctx.font = "24px Arial";
+      ctx.fillText(organization, 30, canvas.height - 60);
+
+      // Draw code
+      ctx.fillText(code, 30, canvas.height - 30);
+
+      // Draw hex code (bottom right)
+      const textWidth = ctx.measureText(hex).width;
+      ctx.fillText(hex.toUpperCase(), canvas.width - textWidth - 30, canvas.height - 30);
+    }
+
+    // Add event listeners to inputs
+    colorNameInput.addEventListener('input', drawCard);
+    colorHexInput.addEventListener('input', drawCard);
+    colorCodeInput.addEventListener('input', drawCard);
+  </script>
+</body>
+</html>
